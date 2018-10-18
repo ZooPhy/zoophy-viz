@@ -1,0 +1,5 @@
+# --------------------------Blacklist---------------------------
+# ------ Add locations below that you want to skip plotting ----
+# Alaska
+# Hawaii
+Puerto Rico
