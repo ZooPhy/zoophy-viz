@@ -1,0 +1,11 @@
+gbarpolu	7.1666698	-10.41667
+montserrado	6.5	-10.5
+nimba	6.75	-8.75
+margibi	6.5	-10.25
+river-gee	5.25	-7.9166698
+grand-bassa	6.25	-9.75
+bomi	6.6666698	-10.83333
+grand-cape-mount	7.1666698	-11.0
+grand-kru	4.9166698	-8.25
+sinoe	5.3333302	-8.6666698
+bong	7.0	-9.6666698
