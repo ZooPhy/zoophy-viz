@@ -562,15 +562,20 @@ def gen_animation(args, polygons, aggregation, pop_centres, group_colours, norma
     time_frames = {x:0 for x in set([int(y) for y in events])}
     for event in events:
         time_frames[int(event)] += 1
-    for time_period in range(int(start_dd), int(end_dd)):
-        frames_in_period = 1
-        if time_frames.has_key(time_period):
-            frames_in_period += int(time_frames[time_period]*num_frames/len(events))+1
-        start_period = bt.decimalDate(dd_to_human(time_period))
-        end_period = bt.decimalDate(dd_to_human(time_period+1))
-        animation_grid += list(np.linspace(start_period, end_period, frames_in_period))
-        # print(time_period, frames_in_period)
+    if int(start_dd) == int(end_dd):
+        animation_grid += list(np.linspace(int(start_dd), int(start_dd)+1, num_frames))
+    else:
+        for time_period in range(int(start_dd), int(end_dd)):
+            frames_in_period = 1
+            if time_frames.has_key(time_period):
+                frames_in_period += int(time_frames[time_period]*num_frames/len(events))+1
+            start_period = bt.decimalDate(dd_to_human(time_period))
+            end_period = bt.decimalDate(dd_to_human(time_period+1))
+            animation_grid += list(np.linspace(start_period, end_period, frames_in_period))
+            # print(time_period, frames_in_period)
+
     # animation_grid = list(np.linspace(bt.decimalDate(start), bt.decimalDate(end), num_frames))
+    print("Animation Grid", animation_grid)
     print('Start of animation: %.2f\nEnd: %.2f'%(min(animation_grid), max(animation_grid)))
     print("", int(start_dd), int(end_dd))
     print('Number of frames to animate: %d'%(len(animation_grid)))

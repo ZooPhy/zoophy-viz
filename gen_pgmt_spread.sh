@@ -9,12 +9,14 @@ coords_file=$2
 # and creating the video file
 work_dir=$3
 
+# output_dir=output/$work_dir
+output_dir=$work_dir
+
 # Generate the frames for the spread
-python -u pgmt.py -t $tree_file -l $coords_file -o output/$work_dir > output/$work_dir.log 2>&1
+python -u pgmt.py -t $tree_file -l $coords_file -o $output_dir > $output_dir-viz.log 2>&1
 
 # Stitch the frames into a video
 fps=15
-output_dir=output/$work_dir
 frames_dir="$output_dir/frames"
 output_file="$output_dir/spread.mp4"
 scale="2160:trunc(ow/a/2)*2"

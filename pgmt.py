@@ -59,6 +59,7 @@ def plot_pgmt(args):
                   bt_tree, circle_function, polygon_data, polygon_max,
                   migration_function, international_border)
 
+# TODO: Restructure and move implementation to class based loading
 # def plot_pmt(args):
 #     '''Main method for plotting the map and tree'''
 #     # Create output directories if absent
@@ -82,30 +83,13 @@ def plot_pgmt(args):
 def main():
     '''Main method : parse arguments'''
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--tree', type=str,# required=True,
-                        # default='examples/06/06.tree',
-                        # default='examples/27/27.tree',
-                        default='examples/26/26.tree',
-                        # default='examples/12/12.tree',
-                        # default='data/10.tree',
-                        # default='trash/Makona_1610_cds_ig.MCC.tree',
+    parser.add_argument('-t', '--tree', type=str, required=True,
                         help="Path to the BEAST tree file")
-    parser.add_argument('-m', '--map', type=str,# required=True,
-                        default='auto',
-                        # default='trash/baltic_example.geojson',
-                        # default='resources/geoJSON_maps/subregion/subregion_South_America_subunits.json',
-                        # default='resources/geoJSON_maps/us/US_States.json',
-                        # default='resources/geoJSON_maps/us/us-states.json',
-                        # default="resources/geoJSON_maps/continents/continent_Europe_subunits.json",
+    parser.add_argument('-m', '--map', type=str, default='auto',
                         help="GeoJSON file to be used as Map")
-    parser.add_argument('-l', '--locs', type=str,# required=True,
-                        # default='examples/06/06-coords.txt',
-                        default='examples/26/26-coords.txt',
-                        # default='examples/27/27-coords.txt',
-                        # default='examples/12/12-coords.txt',
-                        # default='data/10-coords.txt',
+    parser.add_argument('-l', '--locs', type=str, required=True,
                         help="Location coordinates file (See ReadMe for format)")
-    parser.add_argument('-b', '--blst', type=str,# default=None,
+    parser.add_argument('-b', '--blst', type=str,
                         default='blacklist.txt',
                         help="Blacklisted locations file")
     parser.add_argument('-o', '--output', type=str, default='output',

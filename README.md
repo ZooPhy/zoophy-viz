@@ -57,7 +57,7 @@ What you need to use this script.
 
 Usage for the example included in the repository:
 ```
-./gen_pgmt_spread.sh examples/ebola-liberia/ebola-liberia.tree examples/ebola-liberia/ebola-liberia-coords.txt ebola-liberia-plot
+./gen_pgmt_spread.sh examples/ebola-liberia/ebola-liberia.tree examples/ebola-liberia/ebola-liberia-coords.txt output/ebola-liberia-plot
 ```
 This should create a video file called ```spread.mp4``` under the ```output/ebola-liberia-plot``` directory.
 
