@@ -524,7 +524,7 @@ def gen_animation(args, polygons, aggregation, pop_centres, group_colours, norma
     tracking_length = 30.0 ## number of days over which to plot the lineage
     depth = tracking_length/365.0 ## convert to decimal years
     animation_duration = 60.0 ## seconds
-    num_frames = 200 # number of frames to generate
+    num_frames = 500 # number of frames to generate
     # disable secondary plot until we figure out what to put in there
     disable_chart = True # disable the chart below tree
 
