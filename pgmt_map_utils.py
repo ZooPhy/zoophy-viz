@@ -165,7 +165,7 @@ def get_loc_dist(map_loc, loih_list, points_list):
         locs_found = [loih_list[i] for i,x in enumerate(inside) if x]
         if len(locs_found) > 0:
             perc_found = len(locs_found)*100/len(loih_list)
-            print(str(perc_found)+"%", "of locations found in", location, "in", map_loc)
+            print(str(perc_found)+"%", "of locations", locs_found, "found in", location, "in", map_loc)
             loihs_map[location] = locs_found
     return loihs_map
 
@@ -236,10 +236,25 @@ def get_best_map(args, loihs):
     if trim_maps:
         # For now just exclude the polygons if they are not part of the migrations
         # TODO: if world map, exclude polygons outside min and max limits
+        minlong, maxlong, minlat, maxlat = 1000, -1000, 1000, -1000
+        for loc, _ in polygons.items():
+            if loc in loihs_map.keys():
+                minlat=min([min([p.xy[:,0].min() for p in polygons[loc]]), minlat])
+                maxlat=max([max([p.xy[:,0].max() for p in polygons[loc]]), maxlat])
+                minlong=min([min([p.xy[:,1].min() for p in polygons[loc]]), minlong])
+                maxlong=max([max([p.xy[:,1].max() for p in polygons[loc]]), maxlong])
+        print(loc, minlong, maxlong, minlat, maxlat)
         for loc, _ in polygons.items():
             if not loc in loihs_map.keys():
-                print("removing", loc)
-                del polygons[loc]
+                minlt=min([min([p.xy[:,0].min() for p in polygons[loc]])])
+                maxlt=max([max([p.xy[:,0].max() for p in polygons[loc]])])
+                minln=min([min([p.xy[:,1].min() for p in polygons[loc]])])
+                maxln=max([max([p.xy[:,1].max() for p in polygons[loc]])])
+                if (minlat < minlt < maxlat or minlat < maxlt < maxlat) and (minlong < minln < maxlong or minlong < maxln < maxlong):
+                    print("keeping", loc, minln, maxln, minlt, maxlt)
+                else:
+                    print("removing", loc, minln, maxln, minlt, maxlt)
+                    del polygons[loc]
     # sys.exit(0)
     return polygons
 
