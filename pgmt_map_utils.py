@@ -185,7 +185,7 @@ def get_best_map(args, loihs):
     # coordinates are in a single country
     # Get the distribution of loihs by country polygons
     loihs_map = get_loc_dist(WORLD_COUNTRIES, loih_list, points_list)
-    if len(loihs_map) ==  1:
+    if len(loihs_map) == 1:
         # if there is just one country try to find the country's map
         loihs_polygon = loihs_map.keys()[0]
         print("All locations were found in", loihs_polygon)
@@ -235,27 +235,39 @@ def get_best_map(args, loihs):
     # Trim maps to focus well and avoid distraction
     if trim_maps:
         # For now just exclude the polygons if they are not part of the migrations
-        # TODO: if world map, exclude polygons outside min and max limits
         minlong, maxlong, minlat, maxlat = 1000, -1000, 1000, -1000
         for loc, _ in polygons.items():
             if loc in loihs_map.keys():
-                minlat=min([min([p.xy[:,0].min() for p in polygons[loc]]), minlat])
-                maxlat=max([max([p.xy[:,0].max() for p in polygons[loc]]), maxlat])
-                minlong=min([min([p.xy[:,1].min() for p in polygons[loc]]), minlong])
-                maxlong=max([max([p.xy[:,1].max() for p in polygons[loc]]), maxlong])
+                minlat = min([min([p.xy[:, 0].min() for p in polygons[loc]]), minlat])
+                maxlat = max([max([p.xy[:, 0].max() for p in polygons[loc]]), maxlat])
+                minlong = min([min([p.xy[:, 1].min() for p in polygons[loc]]), minlong])
+                maxlong = max([max([p.xy[:, 1].max() for p in polygons[loc]]), maxlong])
         print(loc, minlong, maxlong, minlat, maxlat)
         for loc, _ in polygons.items():
             if not loc in loihs_map.keys():
-                minlt=min([min([p.xy[:,0].min() for p in polygons[loc]])])
-                maxlt=max([max([p.xy[:,0].max() for p in polygons[loc]])])
-                minln=min([min([p.xy[:,1].min() for p in polygons[loc]])])
-                maxln=max([max([p.xy[:,1].max() for p in polygons[loc]])])
+                minlt = min([min([p.xy[:, 0].min() for p in polygons[loc]])])
+                maxlt = max([max([p.xy[:, 0].max() for p in polygons[loc]])])
+                minln = min([min([p.xy[:, 1].min() for p in polygons[loc]])])
+                maxln = max([max([p.xy[:, 1].max() for p in polygons[loc]])])
                 if (minlat < minlt < maxlat or minlat < maxlt < maxlat) and (minlong < minln < maxlong or minlong < maxln < maxlong):
                     print("keeping", loc, minln, maxln, minlt, maxlt)
                 else:
                     print("removing", loc, minln, maxln, minlt, maxlt)
                     del polygons[loc]
-    # sys.exit(0)
+
+    # remove blacklisted polygons that aren't in the migration
+    if args.blst:
+        blacklist_file = open(args.blst, 'r')
+        for line in blacklist_file: ## iterate over spreadsheet of coordinates
+            if line[0] != "#":
+                bl_loc = line.strip()
+                # if there is a polygon that matches the name in the blacklist
+                # and if the polygon isn't in the job, then get rid of them
+                if polygons.has_key(bl_loc) and bl_loc not in loihs_map.keys(): 
+                    ## ignore blacklisted locations
+                    print("Ignoring '", bl_loc, "' specified in Blacklist")
+                    del polygons[bl_loc]
+
     return polygons
 
 
@@ -270,15 +282,6 @@ def get_polygon_and_loihs(args):
         print("Loading map", args.map)
         polygons = load_polygons(args.map)
     
-    # remove blacklisted polygons
-    if args.blst:
-        blacklist_file = open(args.blst, 'r')
-        for line in blacklist_file: ## iterate over spreadsheet of coordinates
-            if line[0] != "#": ## if country matches a location for which polygon is available
-                bl_loc = line.strip()
-                if polygons.has_key(bl_loc): ## ignore blacklisted locations
-                    print("Ignoring '", bl_loc, "' specified in Blacklist")
-                    del polygons[bl_loc]
     # sys.exit(0)
     return polygons, loihs
 

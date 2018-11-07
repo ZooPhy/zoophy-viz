@@ -1,5 +1,6 @@
-# --------------------------Blacklist---------------------------
-# ------ Add locations below that you want to skip plotting ----
-# Alaska
-# Hawaii
+# ----------------------------Blacklist------------------------------
+# -------- Add locations below that you want to skip plotting -------
+# ------ unless involved in the migrations for aesthetic reasons ----
+Alaska
+Hawaii
 Puerto Rico
