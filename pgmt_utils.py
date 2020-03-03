@@ -124,6 +124,75 @@ def get_colours(aggregation, pop_centres, active_centres):
     
     return group_colours, normalised_coordinates, sorted_group
 
+def gen_tree_image(args, polygons, aggregation, pop_centres, bt_tree, group_colours, normalised_coordinates):
+    '''
+    Generate figure 3 and 4
+    '''
+    tipSize=20
+    branchWidth=2
+    locTrait='states' ## trait name for location in tree
+    # locTrait='region' ## trait name for location in tree
+
+    plt.figure(figsize=(20,10),facecolor='w') ## start figure
+    gs = gridspec.GridSpec(2, 1,height_ratios=[3,1],wspace=0.0,hspace=0.0) ## two row figure
+    ax1 = plt.subplot(gs[0]) ## ax1 is tree
+    ax2 = plt.subplot(gs[1],sharex=ax1) ## ax2 is a function for lineage presence circle radius
+    for k in bt_tree.Objects: ## iterate over branches in tree
+        loc=k.traits[locTrait] ## get branch location
+        group=aggregation[loc] ## get location's group
+        cmap=group_colours[group] ## get group's colour map
+        c=cmap(normalised_coordinates[loc]) ## get colour for location based on index of location along PCA1
+        
+        y=k.y ## y coordinate of branch
+        yp=k.parent.y
+        
+        x=k.absoluteTime ## x coordinate of branch
+        xp=k.parent.absoluteTime ## x coordinate of parent branch
+        
+        if k.branchType=='leaf': ## if leaf
+            ax1.scatter(x,y,s=tipSize,facecolor=c,edgecolor='none',zorder=101) ## plot colour tip circle
+            ax1.scatter(x,y,s=tipSize*2,facecolor='k',edgecolor='none',zorder=100) ## black outline underneath every tip
+            
+        elif k.branchType=='node': ## if node
+            yl=k.children[0].y ## first child y coordinate
+            yr=k.children[-1].y ## last child y coordinate
+            
+            if xp==0.0:
+                xp=x
+
+            ax1.plot([x,x],[yl,yr],color=c,lw=branchWidth,zorder=98) ## plot vertical bar
+            
+        ax1.plot([xp,x],[y,y],color=c,lw=branchWidth,zorder=98) ## plot branch
+        
+    # ax1.tick_params(size=0,labelsize=0) ## no ticks or tick labels on all axes
+    ax1.tick_params(size=0,labelsize=0) ## no ticks or tick labels on all axes
+
+    circle_function={loc:None for loc in pop_centres.keys()}
+
+    root_date=bt_tree.Objects[0].absoluteTime ## date of tree root
+    last_tip=root_date+bt_tree.treeHeight ## last tip date in tree
+    x_grid=np.linspace(root_date,last_tip,100) ## 100 equally spaced points between root and last tip
+        
+    for loc in pop_centres.keys(): ## for each location
+        group=aggregation[loc] ## get group
+        cmap=group_colours[group] ## get colour map
+        c=cmap(normalised_coordinates[loc]) ## get location's colour
+        
+        ys=[bt_tree.countLineages(t,condition=lambda x:x.traits[locTrait]==loc) for t in x_grid] ## calculate number of lineages in the location at each time point
+        # ys=np.array(ys)/20.0 ## scale down
+        spl=UnivariateSpline(x_grid,ys) ## use univariate spline...
+        spl.set_smoothing_factor(1.1) ## with some smoothing
+        
+        ys=[sum([k.length for k in bt_tree.Objects if k.traits[locTrait]==loc and k.absoluteTime<t]) for t in x_grid] ## calculate cumulative time spent in location
+        # ys=np.array(ys)/25.0 ## scale down
+        spl=UnivariateSpline(x_grid,ys) ## use univariate spline...    
+        
+        circle_function[loc]=spl ## assign smoothed function to location
+        ax2.plot(x_grid,circle_function[loc](x_grid),color=c) ## plot circle radii over time
+
+    # plt.show()
+    plt.savefig(args.output+'/phylotree.png')   # save the figure to file
+
 def gen_fig_1_2(args, aggregation, pop_centres, group_colours, normalised_coordinates, polygons,
                 international_border, sorted_group):
     '''

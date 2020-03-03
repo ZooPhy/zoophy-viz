@@ -37,6 +37,10 @@ def plot_pgmt(args):
     # international_border = load_borders(polygons, aggregation)
     international_border = []
 
+    # Now Generate image with tree
+    gen_tree_image(args, polygons, aggregation, pop_centres, bt_tree,
+                   group_colours, normalised_coordinates)
+
     # Now generate figures 1 and 2
     print("Generating animation")
     # gen_fig_1_2(args, aggregation, pop_centres, group_colours, normalised_coordinates, polygons,
