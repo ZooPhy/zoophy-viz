@@ -534,7 +534,6 @@ def gen_fig_5_6(args, polygons, aggregation, pop_centres, bt_tree, group_colours
     plt.savefig(args.output+'/6.png')   # save the figure to file
     return migration_function
 
-
 def get_migration_function(args, polygons, aggregation, pop_centres, bt_tree, group_colours,
                 normalised_coordinates, international_border):
     '''
@@ -617,22 +616,25 @@ def gen_animation(args, polygons, aggregation, pop_centres, group_colours, norma
     # Find start and end date for animation
     start_dd = min([x.absoluteTime for x in bt_tree.Objects])
     end_dd = max([x.absoluteTime for x in bt_tree.Objects])
+    # print("Abs time", [x.absoluteTime for x in bt_tree.Objects], "\n Min:", start_dd, "\n Max:", end_dd, "\n Root:", root_date, "\n Last:", last_tip)
     # Add 4% time for padding
-    end_dd = end_dd + (end_dd-start_dd)*.05
+    start_dd = start_dd - (end_dd-start_dd)*.10
+    end_dd = end_dd + (end_dd-start_dd)*.10
     start = dd_to_human(start_dd)
     end = dd_to_human(end_dd)
-
+    # print("Start:", start_dd, "\n End:", end_dd)
     # set animation 
     # set frames based on number of events per time period
     animation_grid = []
     events = [x.absoluteTime for x in bt_tree.Objects]
     events.sort()
-    print(len(events), min(events), max(events), max(events)-min(events), "years")
     time_frames = {x:0 for x in set([int(y) for y in events])}
+    # print("Events:", len(events), "Min:", min(events), "Min:", max(events), "Diff:", max(events)-min(events), "years")
+    # print("Time frames", time_frames)
     for event in events:
         time_frames[int(event)] += 1
-    if int(start_dd) == int(end_dd):
-        animation_grid += list(np.linspace(int(start_dd), int(start_dd)+1, num_frames))
+    if int(end_dd) - int(start_dd) < 2:
+        animation_grid += list(np.linspace(start_dd, end_dd, num_frames))
     else:
         for time_period in range(int(start_dd), int(end_dd)):
             frames_in_period = 1
@@ -648,8 +650,8 @@ def gen_animation(args, polygons, aggregation, pop_centres, group_colours, norma
     print('Start of animation: %.2f\nEnd: %.2f'%(min(animation_grid), max(animation_grid)))
     print("", int(start_dd), int(end_dd))
     print('Number of frames to animate: %d'%(len(animation_grid)))
-    # print(time_frames)
-    # sys.exit()
+    # print(", ".join([str(x) for x in time_frames]))
+    # sys.exit(1)
 
     ## identify extremes of map based on edges of polygons
     lims=[]

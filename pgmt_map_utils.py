@@ -14,7 +14,6 @@ import matplotlib.path as mpltPath
 from os import listdir, makedirs
 from os.path import join, exists
 
-import bezier  # # custom arbitrary order Bezier curves
 import matplotlib as mpl
 import matplotlib.patheffects as path_effects  # # for elegant text
 import numpy as np
@@ -79,7 +78,7 @@ def get_point_coordinates(args):
     print("Loihs", loihs)
     return loihs
 
-def load_polygons(map_loc):
+def load_polygons(map_loc, polygons = {}):
     """
     Load polygons for a given file 
     """
@@ -88,7 +87,7 @@ def load_polygons(map_loc):
 
     features = json_map['features']
     location_points = {}  ## location points will be stored here
-    polygons = {}         ## polygons will be stored here
+    # polygons = {}         ## polygons will be stored here
     ## key name for each feature
     if 'name' in features[0]['properties']:
         locName = 'name'
@@ -151,7 +150,7 @@ def get_loc_dist(map_loc, loih_list, points_list):
     """
     Get the polygons that have the location of infected hosts's coordinates
     """
-    polygons = load_polygons(map_loc)
+    polygons = load_polygons(map_loc, {})
     # for loc_name, polygon in polygons.items():
     #     print(loc_name, len(polygon))
     loihs_map = {}
@@ -177,7 +176,7 @@ def get_best_map(args, loihs):
     for loih, points in loihs.items():
         loih_list.append(loih)
         points_list.append(points)
-    # print(loih_list, points_list)
+    print(loih_list, "\n", points_list)
     print("Choosing best map based on coordinates")
     map_loc = None
 
@@ -185,10 +184,11 @@ def get_best_map(args, loihs):
     # coordinates are in a single country
     # Get the distribution of loihs by country polygons
     loihs_map = get_loc_dist(WORLD_COUNTRIES, loih_list, points_list)
+    print(loihs_map)
     if len(loihs_map) == 1:
         # if there is just one country try to find the country's map
         loihs_polygon = loihs_map.keys()[0]
-        print("All locations were found in", loihs_polygon)
+        print("Countries: All locations were found in", loihs_polygon)
         country_map = join(WORLD_COUNTRIES_DIR, loihs_polygon+".geojson")
         if exists(country_map):
             map_loc = country_map
@@ -200,7 +200,8 @@ def get_best_map(args, loihs):
             loihs_map = get_loc_dist(join(WORLD_SUBREGIONS_DIR, geomap), loih_list, points_list)
             loihs_set = set([y for _, x in loihs_map.items() for y in x])
             if len(loihs_set) == len(loih_list):
-                print("All locations were found in", geomap)
+                print("Subregions: All locations were found in", geomap, len(loihs_set), len(loih_list))
+                print("Subregions: SET", loihs_set, "\nMAP", loih_list)
                 map_loc = join(WORLD_SUBREGIONS_DIR, geomap)
 
     # if not found try to find a continent that fits all loihs
@@ -210,7 +211,7 @@ def get_best_map(args, loihs):
             loihs_map = get_loc_dist(join(WORLD_CONTINENTS_DIR, geomap), loih_list, points_list)
             loihs_set = set([y for _, x in loihs_map.items() for y in x])
             if len(loihs_set) == len(loih_list):
-                print("All locations were found in", geomap)
+                print("Continents: All locations were found in", geomap)
                 map_loc = join(WORLD_CONTINENTS_DIR, geomap)
 
     # if not found try to find a region that fits all loihs
@@ -220,7 +221,7 @@ def get_best_map(args, loihs):
             loihs_map = get_loc_dist(join(WORLD_REGIONS_DIR, geomap), loih_list, points_list)
             loihs_set = set([y for _, x in loihs_map.items() for y in x])
             if len(loihs_set) == len(loih_list):
-                print("All locations were found in", geomap)
+                print("Regions: All locations were found in", geomap)
                 map_loc = join(WORLD_REGIONS_DIR, geomap)
 
     trim_maps = False
@@ -229,8 +230,19 @@ def get_best_map(args, loihs):
         trim_maps = True
     print("Loading polygons using map:", map_loc)
 
-    loihs_map = get_loc_dist(WORLD_COUNTRIES, loih_list, points_list)
+    # load the main map
     polygons = load_polygons(map_loc)
+
+    # now load country map if more than one location within map
+    loihs_map = get_loc_dist(WORLD_COUNTRIES, loih_list, points_list)
+    if len(loihs_map) > 1:
+        for loc, found in loihs_map.items():
+            country_map = join(WORLD_COUNTRIES_DIR, loc+".geojson")
+            if exists(country_map):
+                print("Loading", country_map)
+                polygons = load_polygons(country_map, polygons)
+            else:
+                print("Not exists map", country_map)
 
     # Trim maps to focus well and avoid distraction
     if trim_maps:
@@ -242,14 +254,14 @@ def get_best_map(args, loihs):
                 maxlat = max([max([p.xy[:, 0].max() for p in polygons[loc]]), maxlat])
                 minlong = min([min([p.xy[:, 1].min() for p in polygons[loc]]), minlong])
                 maxlong = max([max([p.xy[:, 1].max() for p in polygons[loc]]), maxlong])
-        print(loc, minlong, maxlong, minlat, maxlat)
         for loc, _ in polygons.items():
             if not loc in loihs_map.keys():
                 minlt = min([min([p.xy[:, 0].min() for p in polygons[loc]])])
                 maxlt = max([max([p.xy[:, 0].max() for p in polygons[loc]])])
                 minln = min([min([p.xy[:, 1].min() for p in polygons[loc]])])
                 maxln = max([max([p.xy[:, 1].max() for p in polygons[loc]])])
-                if (minlat < minlt < maxlat or minlat < maxlt < maxlat) and (minlong < minln < maxlong or minlong < maxln < maxlong):
+                if ((minlat < minlt < maxlat or minlat < maxlt < maxlat) and 
+                    (minlong < minln < maxlong or minlong < maxln < maxlong)):
                     print("keeping", loc, minln, maxln, minlt, maxlt)
                 else:
                     print("removing", loc, minln, maxln, minlt, maxlt)

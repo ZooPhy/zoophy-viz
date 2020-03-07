@@ -49,7 +49,8 @@ For other OS, check [FFmpeg Documentation](https://www.ffmpeg.org/download.html)
 # Running the script
 What you need to use this script. 
 1) An output file i.e. ```.tree``` file from BEAST.
-2) A co-ordinates ```.txt``` file where the location idenfier is mapped .
+2) A co-ordinates ```.txt``` file where the location identifier is mapped to the location trait.
+
 ```
 ./gen_pgmt_spread.sh [beast-tree-file] [coordinates-file] [working-directory]
 ```
@@ -65,4 +66,4 @@ This should create a video file called ```spread.mp4``` under the ```output/ebol
 
 1) Code sources: [Curonia Notebook](https://github.com/blab/baltic/blob/master/curonia.ipynb), [Baltic Trees](https://github.com/blab/baltic/blob/master/baltic.py)
 
-2) Map sources: [SpreaD3](https://github.com/phylogeography/SpreaD3), [Grokbase GeoJSON Maps](https://grokbase.com/t/gg/d3-js/1372gq18j9/geojson-maps), [click_that_hood](https://github.com/codeforamerica/click_that_hood)
+2) Map sources: [OpenStreetMap](https://www.openstreetmap.org/), [SpreaD3](https://github.com/phylogeography/SpreaD3), [Grokbase GeoJSON Maps](https://grokbase.com/t/gg/d3-js/1372gq18j9/geojson-maps), [click_that_hood](https://github.com/codeforamerica/click_that_hood), [Vizzuality](https://github.com/Vizzuality/growasia_calculator)
