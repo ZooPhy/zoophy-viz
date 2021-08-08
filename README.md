@@ -35,7 +35,7 @@ Following are software requirements for this implmentation.
 
 The system depends on a few python packages that can be installed using the command:
 ```
-cd zoophy-viz"
+cd zoophy-viz
 pip install --upgrade -r requirements.txt
 ```
 
