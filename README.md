@@ -35,6 +35,7 @@ Following are software requirements for this implmentation.
 
 The system depends on a few python packages that can be installed using the command:
 ```
+cd zoophy-viz"
 pip install --upgrade -r requirements.txt
 ```
 
@@ -44,6 +45,11 @@ On Ubuntu you can install FFmpeg using:
 ```
 sudo apt-get install ffmpeg
 ```
+On mac you can install FFmpeg using:
+```
+brew install ffmpeg
+```
+
 For other OS, check [FFmpeg Documentation](https://www.ffmpeg.org/download.html).
 
 # Running the script
