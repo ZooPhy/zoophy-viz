@@ -54,7 +54,7 @@ For other OS, check [FFmpeg Documentation](https://www.ffmpeg.org/download.html)
 
 # Running the script
 What you need to use this script. 
-1) An output file i.e. ```.tree``` file from BEAST. The .tree file needs to have discrete location ```states```. No other name (i.e. location, county, etc.) will work.
+1) An output file i.e. ```.tree``` file from BEAST. The .tree file needs to have discrete location ```states```. No other name (i.e. location, county, etc.) will work. Taxon labels need to be formatted with underscore delimiters that include ID_decimal date_state such as: https://raw.githubusercontent.com/ZooPhy/zoophy-viz/master/examples/ebola-africa/ebola-africa.tree
 2) A co-ordinates ```.txt``` file where the location identifier is mapped to the location trait.
 
 ```
