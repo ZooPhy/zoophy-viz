@@ -54,7 +54,7 @@ For other OS, check [FFmpeg Documentation](https://www.ffmpeg.org/download.html)
 
 # Running the script
 What you need to use this script. 
-1) An output file i.e. ```.tree``` file from BEAST. The .tree file needs to have discrete location ```states```.
+1) An output file i.e. ```.tree``` file from BEAST. The .tree file needs to have discrete location ```states```. No other name (i.e. location, county, etc.) will work.
 2) A co-ordinates ```.txt``` file where the location identifier is mapped to the location trait.
 
 ```
