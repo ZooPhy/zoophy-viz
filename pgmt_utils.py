@@ -636,7 +636,7 @@ def gen_animation(args, polygons, aggregation, pop_centres, group_colours, norma
     if int(end_dd) - int(start_dd) < 2:
         animation_grid += list(np.linspace(start_dd, end_dd, num_frames))
     else:
-        for time_period in range(int(start_dd), int(end_dd)):
+        for time_period in range(int(start_dd), int(end_dd)+1):
             frames_in_period = 1
             if time_frames.has_key(time_period):
                 frames_in_period += int(time_frames[time_period]*num_frames/len(events))+1
