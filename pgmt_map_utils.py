@@ -15,6 +15,7 @@ from os import listdir, makedirs
 from os.path import join, exists
 
 import matplotlib as mpl
+mpl.use('TkAgg')
 import matplotlib.patheffects as path_effects  # # for elegant text
 import numpy as np
 import unidecode  # # for removing diacritics from example geoJSON

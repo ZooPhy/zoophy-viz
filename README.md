@@ -56,21 +56,20 @@ For other OS, check [FFmpeg Documentation](https://www.ffmpeg.org/download.html)
 What you need to use this script. 
 1) An output file i.e. ```.tree``` file from BEAST. The .tree file needs to have discrete location ```states```. No other name (i.e. location, county, etc.) will work. Taxon labels need to be formatted with underscore delimiters that include ID_decimal date_state such as: https://raw.githubusercontent.com/ZooPhy/zoophy-viz/master/examples/ebola-africa/ebola-africa.tree
 2) A co-ordinates ```.txt``` file where the location identifier is mapped to the location trait.
-3) (Optional) A geojson maps file for the animation. By default the most appropriate map is picked among the available maps.
+3) (Optional) A geojson maps file for the animation. By default the most appropriate map is picked among the available maps in the `resources` directory.
 
 ```
-./gen_pgmt_spread.sh [beast-tree-file] [coordinates-file] [geojson-map/auto] [working-directory]
+./gen_pgmt_spread.sh [beast-tree-file] [coordinates-file] [working-directory]
 ```
-
 
 Usage for the example included in the repository:
 ```
 ./gen_pgmt_spread.sh examples/ebola-liberia/ebola-liberia.tree examples/ebola-liberia/ebola-liberia-coords.txt auto output/ebola-liberia-plot
 ```
 
-To specify custom map:
+To specify custom map, just add the path of the geojson to the end of the command:
 ```
-./gen_pgmt_spread.sh examples/ebola-liberia/ebola-liberia.tree examples/ebola-liberia/ebola-liberia-coords.txt resources/maps/regions/Africa.json output/ebola-liberia-plot
+./gen_pgmt_spread.sh examples/ebola-liberia/ebola-liberia.tree examples/ebola-liberia/ebola-liberia-coords.txt output/ebola-liberia-plot resources/maps/regions/Africa.json
 ```
 
 This should create a video file called ```spread.mp4``` under the ```output/ebola-liberia-plot``` directory.

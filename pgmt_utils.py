@@ -16,6 +16,7 @@ from os.path import join, exists
 
 import bezier  # # custom arbitrary order Bezier curves
 import matplotlib as mpl
+mpl.use('TkAgg')
 import matplotlib.patheffects as path_effects  # # for elegant text
 import numpy as np
 import unidecode  # # for removing diacritics from example geoJSON
