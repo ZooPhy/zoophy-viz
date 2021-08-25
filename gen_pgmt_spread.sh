@@ -4,16 +4,19 @@
 tree_file=$1
 # Path to the coordinates file create by zoophy
 coords_file=$2
+# Path to the maps file
+maps_file=$3
 # Job ID created by zoophy. A directory will be created
 # with this name and will be used for generating frames
 # and creating the video file
-work_dir=$3
+work_dir=$4
 
 # output_dir=output/$work_dir
 output_dir=$work_dir
 
 # Generate the frames for the spread
-python -u pgmt.py -t $tree_file -l $coords_file -o $output_dir > $output_dir-viz.log 2>&1
+python -u pgmt.py -t $tree_file -l $coords_file -m $maps_file -o $output_dir > $output_dir-viz.log 2>&1
+
 
 # Stitch the frames into a video
 fps=15
